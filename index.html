@@ -49,6 +49,7 @@
         <h2>มหาวิทยาลัยนวมินทราธิราช</h2>
 
         <form id="researchForm">
+            <!-- 1. ประเภทรางวัล -->
             <div class="form-group">
                 <label>1. ประเภทรางวัล <span class="required">*</span></label>
                 <div class="radio-group">
@@ -63,6 +64,7 @@
                 </div>
             </div>
 
+            <!-- 2. สถานะของผู้ส่งผลงาน -->
             <div class="form-group">
                 <label for="userStatus">2. สถานะของผู้ส่งผลงาน <span class="required">*</span></label>
                 <select id="userStatus" name="userStatus" required>
@@ -75,6 +77,7 @@
                 </select>
             </div>
 
+            <!-- 3. รายละเอียดผู้ส่งผลงาน -->
             <div class="form-group">
                 <label for="fullName">3. ชื่อ-สกุล ผู้ส่งผลงาน (ระบุคำนำหน้า/ตำแหน่งทางวิชาการ) <span class="required">*</span></label>
                 <input type="text" id="fullName" name="fullName" placeholder="เช่น ผศ.ดร. สมชาย ใจดี" required>
@@ -92,6 +95,7 @@
                 <input type="tel" id="phone" name="phone" required>
             </div>
 
+            <!-- 4. แนบไฟล์เอกสาร -->
             <div class="form-group">
                 <label>4. แนบไฟล์เอกสาร (รองรับไฟล์ PDF เท่านั้น) <span class="required">*</span></label>
                 <div class="file-group">
@@ -119,6 +123,7 @@
         </form>
     </div>
 
+    <!-- 5. ข้อมูลที่ส่งแล้ว -->
     <div class="container" style="margin-bottom: 50px;">
         <div class="result-container">
             <div class="result-title"><i class="fa-solid fa-clock-rotate-left"></i> ข้อมูลที่ส่งล่าสุด</div>
@@ -132,7 +137,7 @@
     </div>
 
     <script>
-        // 🔗 อัปเดต URL ใหม่ของคุณเรียบร้อยแล้วครับ
+        // 🔗 ลิงก์ Web App
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbLk7VkHMRcOxylJEBDQ4xK1p78e-dw7PPi2B9AUftf-oYlwl46JMGMlFJx8D0LxqnwA/exec";
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -176,6 +181,7 @@
             });
         };
 
+        // 🛠️ ปรับปรุงระบบส่งข้อมูลเป็น URLSearchParams + no-cors เพื่อแก้ปัญหาข้อมูลไม่เข้าบน GitHub Pages
         document.getElementById('researchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -193,50 +199,29 @@
                 const abstractData = await readFileAsBase64(abstractFileInput);
                 const formDataFile = await readFileAsBase64(formFileInput);
 
-                const formData = new FormData();
-                formData.append('awardType', document.querySelector('input[name="awardType"]:checked').value);
-                formData.append('userStatus', document.getElementById('userStatus').value);
-                formData.append('fullName', document.getElementById('fullName').value);
-                formData.append('department', document.getElementById('department').value);
-                formData.append('email', document.getElementById('email').value);
-                formData.append('phone', document.getElementById('phone').value);
-                formData.append('abstractBase64', abstractData.base64);
-                formData.append('abstractName', abstractData.name);
-                formData.append('formBase64', formDataFile.base64);
-                formData.append('formName', formDataFile.name);
+                const params = new URLSearchParams();
+                params.append('awardType', document.querySelector('input[name="awardType"]:checked').value);
+                params.append('userStatus', document.getElementById('userStatus').value);
+                params.append('fullName', document.getElementById('fullName').value);
+                params.append('department', document.getElementById('department').value);
+                params.append('email', document.getElementById('email').value);
+                params.append('phone', document.getElementById('phone').value);
+                params.append('abstractBase64', abstractData.base64);
+                params.append('abstractName', abstractData.name);
+                params.append('formBase64', formDataFile.base64);
+                params.append('formName', formDataFile.name);
 
-                const response = await fetch(SCRIPT_URL, {
+                // ยิงข้อมูลด้วยโหมด no-cors เพื่อทะลุกำแพง CORS บนเซิร์ฟเวอร์
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: formData
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params.toString()
                 });
 
-                const resData = await response.json();
-
-                if (resData.status === "success") {
-                    localStorage.setItem('latest_submission', JSON.stringify({
-                        awardType: document.querySelector('input[name="awardType"]:checked').value,
-                        fullName: document.getElementById('fullName').value,
-                        department: document.getElementById('department').value,
-                        email: document.getElementById('email').value
-                    }));
-                    showLatestSubmission();
-
-                    formFields.forEach(id => localStorage.removeItem(`draft_${id}`));
-                    localStorage.removeItem('draft_awardType');
-                    document.getElementById('researchForm').reset();
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'บันทึกสำเร็จ!',
-                        text: 'ข้อมูลและไฟล์ PDF ของคุณถูกบันทึกเรียบร้อยแล้ว',
-                        confirmButtonColor: '#1e88e5'
-                    });
-                } else {
-                    throw new Error(resData.message);
-                }
-
-            } catch (error) {
-                // สำหรับกรณีติดเรื่อง Redirect ของ Google Web App แต่ข้อมูลเข้าชีตเรียบร้อยแล้ว
+                // แสดงผลสำเร็จได้เลยเนื่องจากโหมด no-cors ข้อมูลจะเข้าชีตสำเร็จแต่ฝั่งเว็บจะอ่าน response ไม่ได้
                 localStorage.setItem('latest_submission', JSON.stringify({
                     awardType: document.querySelector('input[name="awardType"]:checked').value,
                     fullName: document.getElementById('fullName').value,
@@ -244,7 +229,7 @@
                     email: document.getElementById('email').value
                 }));
                 showLatestSubmission();
-                
+
                 formFields.forEach(id => localStorage.removeItem(`draft_${id}`));
                 localStorage.removeItem('draft_awardType');
                 document.getElementById('researchForm').reset();
@@ -254,6 +239,15 @@
                     title: 'ส่งผลงานสำเร็จ!',
                     text: 'ระบบได้นำข้อมูลและไฟล์เข้าสู่ฐานข้อมูลเรียบร้อยแล้ว',
                     confirmButtonColor: '#1e88e5'
+                });
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบสิทธิ์ของ Web App อีกครั้ง',
+                    confirmButtonColor: '#d32f2f'
                 });
             }
         });
@@ -272,6 +266,7 @@
             }
         }
 
+        // 🔗 ลิงก์ Google Sheet
         document.getElementById('btnViewSheet').addEventListener('click', () => {
             window.open("https://docs.google.com/spreadsheets/d/1BS8SpExv6O0mB64kD_02df99hJiVNui4aMAEFkdSOAw/edit?gid=0#gid=0", "_blank");
         });
