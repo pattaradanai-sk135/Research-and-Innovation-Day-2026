@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบส่งผลงานประกวด Research & Innovation Day 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --bg-color: #e3f2fd; 
+            --card-color: #ffffff; 
+            --accent-color: #0056b3;
+            --text-color: #2c3e50;
+            --cream-bg: #fffdf9; 
+            --border-color: #ced4da;
+        }
+
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 30px 15px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .container { max-width: 750px; width: 100%; background: var(--card-color); padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        h1 { font-size: 24px; color: #0d47a1; text-align: center; margin-bottom: 5px; font-weight: 700; }
+        h2 { font-size: 18px; color: #5c6bc0; text-align: center; margin-bottom: 30px; font-weight: 500; }
+        .form-group { margin-bottom: 22px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 15px; }
+        label .required { color: #d32f2f; }
+        input[type="text"], input[type="email"], input[type="tel"], select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background-color: var(--cream-bg); transition: all 0.3s ease; }
+        input:focus, select:focus { outline: none; border-color: #1e88e5; box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15); }
+        .radio-group, .file-group { background-color: var(--cream-bg); padding: 15px; border-radius: 8px; border: 1px solid #f1f1f1; }
+        .radio-option { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        .radio-option input { margin-right: 10px; transform: scale(1.1); }
+        input[type="file"] { width: 100%; padding: 8px; background: #fff; border: 1px dashed var(--border-color); border-radius: 6px; cursor: pointer; }
+        .checkbox-container { display: flex; align-items: flex-start; margin-top: 30px; background: #fff9c4; padding: 15px; border-radius: 8px; font-size: 14px; }
+        .checkbox-container input { margin-right: 12px; margin-top: 4px; transform: scale(1.2); }
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; text-align: center; margin-top: 20px; }
+        .btn-submit { background-color: #1e88e5; color: white; }
+        .btn-submit:hover { background-color: #1565c0; }
+        .btn-view { background-color: #43a047; color: white; margin-top: 15px; }
+        .btn-view:hover { background-color: #2e7d32; }
+        .result-container { background: var(--card-color); border-radius: 12px; padding: 25px; border-left: 6px solid #1e88e5; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .result-title { font-size: 16px; font-weight: bold; color: #0d47a1; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .result-item { margin-bottom: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ระบบส่งผลงานประกวด Research & Innovation Day 2026</h1>
+        <h2>มหาวิทยาลัยนวมินทราธิราช</h2>
+
+        <form id="researchForm">
+            <div class="form-group">
+                <label>1. ประเภทรางวัล <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="awardType" value="รางวัลผลงานวิจัยดีเด่น ประจำปี พ.ศ. 2569" required>
+                        <span>รางวัลผลงานวิจัยดีเด่น ประจำปี พ.ศ. 2569</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="awardType" value="รางวัลผลงานนวัตกรรมดีเด่น ประจำปี พ.ศ. 2569">
+                        <span>รางวัลผลงานนวัตกรรมดีเด่น ประจำปี พ.ศ. 2569</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="userStatus">2. สถานะของผู้ส่งผลงาน <span class="required">*</span></label>
+                <select id="userStatus" name="userStatus" required>
+                    <option value="" disabled selected>-- เลือกสถานะของคุณ --</option>
+                    <option value="บุคลากรประเภทสายวิชาการ">บุคลากรประเภทสายวิชาการ</option>
+                    <option value="บุคลากรประเภทสนับสนุน">บุคลากรประเภทสนับสนุน</option>
+                    <option value="Resident: แพทย์ประจำบ้าน">Resident: แพทย์ประจำบ้าน</option>
+                    <option value="Fellow: แพทย์ประจำบ้านต่อยอด">Fellow: แพทย์ประจำบ้านต่อยอด</option>
+                    <option value="นักศึกษาในระดับปริญญาโทที่ทำวิทยานิพนธ์">นักศึกษาในระดับปริญญาโทที่ทำวิทยานิพนธ์</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="fullName">3. ชื่อ-สกุล ผู้ส่งผลงาน (ระบุคำนำหน้า/ตำแหน่งทางวิชาการ) <span class="required">*</span></label>
+                <input type="text" id="fullName" name="fullName" placeholder="เช่น ผศ.ดร. สมชาย ใจดี" required>
+            </div>
+            <div class="form-group">
+                <label for="department">สังกัด <span class="required">*</span></label>
+                <input type="text" id="department" name="department" required>
+            </div>
+            <div class="form-group">
+                <label for="email">e-mail <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">เบอร์ติดต่อ <span class="required">*</span></label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>4. แนบไฟล์เอกสาร (รองรับไฟล์ PDF เท่านั้น) <span class="required">*</span></label>
+                <div class="file-group">
+                    <div style="margin-bottom: 12px;">
+                        <label for="fileAbstract" style="font-size: 13px; font-weight: normal;">บทคัดย่อ (Abstract) <span class="required">*</span></label>
+                        <input type="file" id="fileAbstract" accept=".pdf" required>
+                    </div>
+                    <div>
+                        <label for="fileForm" style="font-size: 13px; font-weight: normal;">แบบฟอร์มประกวดผลงานฯ <span class="required">*</span></label>
+                        <input type="file" id="fileForm" accept=".pdf" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="certify" required>
+                <label for="certify" style="font-weight: normal; margin: 0; cursor: pointer;">
+                    ข้าพเจ้าในฐานะผู้ส่งผลงาน ขอรับรองว่าข้าพเจ้าเป็นผู้ดำเนินการกรอกรายละเอียดข้างต้นด้วยตนเอง และข้อมูลเป็นจริงทุกประการ
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-submit">
+                <i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล
+            </button>
+        </form>
+    </div>
+
+    <div class="container" style="margin-bottom: 50px;">
+        <div class="result-container">
+            <div class="result-title"><i class="fa-solid fa-clock-rotate-left"></i> ข้อมูลที่ส่งล่าสุด</div>
+            <div id="latestSubmission">
+                <p style="color: #888; font-size: 14px; text-align: center;">ยังไม่มีข้อมูลการส่งในเซสชันนี้</p>
+            </div>
+        </div>
+        <button type="button" id="btnViewSheet" class="btn btn-view">
+            <i class="fa-solid fa-table"></i> เรียกดูข้อมูลจาก Google Sheet
+        </button>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/a/macros/nmu.ac.th/s/AKfycby3woOtfycljmNNteQeh76u18D72Jq6FEOzMaboHH3pAUhF3wl4_qc32OXi4xdIGdwC/exec";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadDraftData();
+            showLatestSubmission();
+        });
+
+        const formFields = ['userStatus', 'fullName', 'department', 'email', 'phone'];
+        formFields.forEach(fieldId => {
+            document.getElementById(fieldId).addEventListener('input', (e) => {
+                localStorage.setItem(`draft_${fieldId}`, e.target.value);
+            });
+        });
+        document.querySelectorAll('input[name="awardType"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                localStorage.setItem('draft_awardType', e.target.value);
+            });
+        });
+
+        function loadDraftData() {
+            formFields.forEach(fieldId => {
+                const savedValue = localStorage.getItem(`draft_${fieldId}`);
+                if (savedValue) document.getElementById(fieldId).value = savedValue;
+            });
+            const savedAward = localStorage.getItem('draft_awardType');
+            if (savedAward) {
+                const radio = document.querySelector(`input[name="awardType"][value="${savedAward}"]`);
+                if (radio) radio.checked = true;
+            }
+        }
+
+        // ฟังก์ชันช่วยแปลงไฟล์ PDF เป็น Base64 ข้อความ
+        const readFileAsBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve({ base64: base64String, name: file.name });
+                };
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        document.getElementById('researchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'กำลังอัปโหลดไฟล์และบันทึกข้อมูล...',
+                text: 'กรุณารอสักครู่ (ไฟล์ขนาดใหญ่ขึ้นอยู่อินเทอร์เน็ตอาจใช้เวลา 5-10 วินาที)',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                const abstractFileInput = document.getElementById('fileAbstract').files[0];
+                const formFileInput = document.getElementById('fileForm').files[0];
+
+                // แปลงไฟล์ทั้งสองเป็น Base64
+                const abstractData = await readFileAsBase64(abstractFileInput);
+                const formDataFile = await readFileAsBase64(formFileInput);
+
+                const payload = {
+                    awardType: document.querySelector('input[name="awardType"]:checked').value,
+                    userStatus: document.getElementById('userStatus').value,
+                    fullName: document.getElementById('fullName').value,
+                    department: document.getElementById('department').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    abstractBase64: abstractData.base64,
+                    abstractName: abstractData.name,
+                    formBase64: formDataFile.base64,
+                    formName: formDataFile.name
+                };
+
+                // ส่งด้วย POST Method เพื่อทะลุขีดจำกัดขนาดไฟล์
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // สำหรับโหมด no-cors เราจะไม่สามารถอ่านการตอบกลับตรงๆ ได้ 
+                // แต่ถ้าระบบไม่ขึ้น Error ไปที่ catch แปลว่าส่งเรียบร้อยดี
+                localStorage.setItem('latest_submission', JSON.stringify({
+                    awardType: payload.awardType,
+                    fullName: payload.fullName,
+                    department: payload.department,
+                    email: payload.email
+                }));
+                showLatestSubmission();
+
+                formFields.forEach(id => localStorage.removeItem(`draft_${id}`));
+                localStorage.removeItem('draft_awardType');
+                document.getElementById('researchForm').reset();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ส่งผลงานและอัปโหลดไฟล์สำเร็จ!',
+                    text: 'ไฟล์ PDF ถูกบันทึกลง Google Drive และลงทะเบียนในชีตเรียบร้อย',
+                    confirmButtonColor: '#1e88e5'
+                });
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถอัปโหลดไฟล์ได้ กรุณาตรวจสอบขนาดไฟล์หรือลองใหม่อีกครั้ง',
+                    confirmButtonColor: '#d32f2f'
+                });
+            }
+        });
+
+        function showLatestSubmission() {
+            const dataStr = localStorage.getItem('latest_submission');
+            const displayDiv = document.getElementById('latestSubmission');
+            if (dataStr) {
+                const data = JSON.parse(dataStr);
+                displayDiv.innerHTML = `
+                    <div class="result-item"><strong>ประเภทรางวัลที่ส่ง:</strong> ${data.awardType}</div>
+                    <div class="result-item"><strong>ผู้ส่งผลงาน:</strong> ${data.fullName}</div>
+                    <div class="result-item"><strong>สังกัด:</strong> ${data.department}</div>
+                    <div class="result-item"><strong>อีเมล:</strong> ${data.email}</div>
+                `;
+            }
+        }
+
+        document.getElementById('btnViewSheet').addEventListener('click', () => {
+            window.open("https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit", "_blank");
+        });
+    </script>
+</body>
+</html>
